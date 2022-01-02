@@ -1,20 +1,20 @@
-name: "Checkout and run npm"
-description: "This action checks out the commit, sets up Node and installs deps using npm."
-author: "yoobic"
+name: 'Checkout and npm install'
+description: 'This action checks out the commit, sets up Node and installs deps using npm.'
+author: 'yoobic'
 inputs:
   fetch-depth:
     required: false
-    description: "Number of commits to fetch during checkout. 0 indicates all history for all branches and tags."
-    default: "1"
+    description: 'Number of commits to fetch during checkout. 0 indicates all history for all branches and tags.'
+    default: '1'
   token:
     required: false
-    description: "Personal access token (PAT) used to fetch the repository."
+    description: 'Personal access token (PAT) used to fetch the repository.'
     default: ${{ github.token }}
   gcp_credentials:
     required: false
-    description: "The google credentials"
+    description: 'The google credentials'
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -31,8 +31,8 @@ runs:
     - name: Setting up the execution env
       uses: actions/setup-node@v2
       with:
-        node-version-file: ".nvmrc"
-        cache: "npm"
+        node-version-file: '.nvmrc'
+        cache: 'npm'
 
     - name: Cache dependencies
       id: cache-dependencies
