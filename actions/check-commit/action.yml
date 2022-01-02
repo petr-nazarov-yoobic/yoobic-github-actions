@@ -1,0 +1,18 @@
+name: "Check commit message"
+description: "This action checks if the commit is a real commit or just a tag commit"
+author: "yoobic"
+outputs:
+  match:
+    description: true if the commit is not real
+    value: ${{ steps.check-commit.outputs.match }}
+runs:
+  using: "composite"
+  steps:
+    - name: Compare commit message to regex
+      id: check-commit
+      shell: bash
+      run: |
+        echo ::set-output name=match::false
+        if [[ '${{ github.event.head_commit.message }}' =~ ^chore.+[0-9].[0-9]+.[0-9]+$ ]]; then
+            echo ::set-output name=match::true
+        fi

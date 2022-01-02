@@ -1,60 +1,60 @@
-name: 'Checkout and run npm'
-description: 'This action checks out the commit, sets up Node and installs deps using npm.'
-author: 'yoobic'
+name: "Checkout and run npm"
+description: "This action checks out the commit, sets up Node and installs deps using npm."
+author: "yoobic"
 inputs:
-    fetch-depth:
-        required: false
-        description: 'Number of commits to fetch during checkout. 0 indicates all history for all branches and tags.'
-        default: '1'
-    token:
-        required: false
-        description: 'Personal access token (PAT) used to fetch the repository.'
-        default: ${{ github.token }}
-    gcp_credentials:
-        required: false
-        description: 'The google credentials'
+  fetch-depth:
+    required: false
+    description: "Number of commits to fetch during checkout. 0 indicates all history for all branches and tags."
+    default: "1"
+  token:
+    required: false
+    description: "Personal access token (PAT) used to fetch the repository."
+    default: ${{ github.token }}
+  gcp_credentials:
+    required: false
+    description: "The google credentials"
 runs:
-    using: 'composite'
-    steps:
-        - name: Checkout
-          uses: actions/checkout@v2
-          with:
-              fetch-depth: ${{ inputs.fetch-depth }}
-              token: ${{ inputs.token }}
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: ${{ inputs.fetch-depth }}
+        token: ${{ inputs.token }}
 
-        - name: Google authentication
-          uses: google-github-actions/auth@v0.4.0
-          if: ${{ inputs.gcp_credentials }}
-          with:
-            credentials_json: ${{ inputs.gcp_credentials }}
+    - name: Google authentication
+      uses: google-github-actions/auth@v0.4.0
+      if: ${{ inputs.gcp_credentials }}
+      with:
+        credentials_json: ${{ inputs.gcp_credentials }}
 
-        - name: Setting up the execution env 
-          uses: actions/setup-node@v2
-          with:
-            node-version-file: '.nvmrc'
-            cache: 'npm'
+    - name: Setting up the execution env
+      uses: actions/setup-node@v2
+      with:
+        node-version-file: ".nvmrc"
+        cache: "npm"
 
-        - name: Cache dependencies
-          id: cache-dependencies
-          uses: actions/cache@v2
-          with:
-            path: ./node_modules
-            key: modules-${{ hashFiles('package-lock.json') }}
-        
-        - name: Cache eslint
-          id: cache-eslint
-          uses: actions/cache@v2
-          with:
-            path: ./.eslintcache
-            key: eslint-
-            restore-keys: eslint-
+    - name: Cache dependencies
+      id: cache-dependencies
+      uses: actions/cache@v2
+      with:
+        path: ./node_modules
+        key: modules-${{ hashFiles('package-lock.json') }}
 
-        - name: Configure gcp artifact
-          if: ${{ inputs.gcp_credentials }}
-          run: npx google-artifactregistry-auth
-          shell: bash
-        
-        - name: Install dependencies
-          if: steps.cache-dependencies.outputs.cache-hit != 'true'
-          run: npm install # ci --ignore-script
-          shell: bash
+    - name: Cache eslint
+      id: cache-eslint
+      uses: actions/cache@v2
+      with:
+        path: ./.eslintcache
+        key: eslint-
+        restore-keys: eslint-
+
+    - name: Configure gcp artifact
+      if: ${{ inputs.gcp_credentials }}
+      run: npx google-artifactregistry-auth
+      shell: bash
+
+    - name: Install dependencies
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: npm install # ci --ignore-script
+      shell: bash

@@ -1,38 +1,35 @@
-name: 'Publish npm package to google artifacts'
-description: 'This action checks out the commit, and publish the npm package to google artifacts. This action typically runs after checkout-and-npm'
-author: 'yoobic'
+name: "Publish npm package to google artifacts"
+description: "This action checks out the commit, and publish the npm package to google artifacts. This action typically runs after checkout-and-npm"
+author: "yoobic"
 inputs:
-    fetch-depth:
-        required: false
-        description: 'Number of commits to fetch during checkout. 0 indicates all history for all branches and tags.'
-        default: '1'
-    token:
-        required: false
-        description: 'Personal access token (PAT) used to fetch the repository.'
-        default: ${{ github.token }}
-    gcp_credentials:
-        required: true
-        description: 'The google credentials'
-     
+  fetch-depth:
+    required: false
+    description: "Number of commits to fetch during checkout. 0 indicates all history for all branches and tags."
+    default: "1"
+  token:
+    required: false
+    description: "Personal access token (PAT) used to fetch the repository."
+    default: ${{ github.token }}
+  gcp_credentials:
+    required: true
+    description: "The google credentials"
+
 runs:
-    using: 'composite'
-    steps:
+  using: "composite"
+  steps:
+    - name: Google authentication
+      uses: google-github-actions/auth@v0.4.0
+      with:
+        credentials_json: ${{ inputs.gcp_credentials }}
 
-        - name: Google authentication
-          uses: google-github-actions/auth@v0.4.0
-          with:
-            credentials_json: ${{ inputs.gcp_credentials }}
-        
-        - name: Authorize npm registry
-          shell: bash
-          run: npx google-artifactregistry-auth 
+    - name: Authorize npm registry
+      shell: bash
+      run: npx google-artifactregistry-auth
 
-        - name: Build
-          run: npm run build --if-present
-          shell: bash
+    - name: Build
+      run: npm run build --if-present
+      shell: bash
 
-        - name: Publish to npm
-          shell: bash
-          run: npm publish
-        
-      
+    - name: Publish to npm
+      shell: bash
+      run: npm publish
