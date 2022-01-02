@@ -1,0 +1,71 @@
+name: 'Publish docker image to google artifacts'
+description: 'This action checks out the commit, and deploy docker to google artifacts.'
+author: 'yoobic'
+inputs:
+    fetch-depth:
+        required: false
+        description: 'Number of commits to fetch during checkout. 0 indicates all history for all branches and tags.'
+        default: '1'
+    token:
+        required: false
+        description: 'Personal access token (PAT) used to fetch the repository.'
+        default: ${{ github.token }}
+    gcp_credentials:
+        required: true
+        description: 'The google credentials'
+    image:
+        required: true
+        description: 'The name of the image'
+    region:
+        required: false
+        description: 'The google region'
+        default: europe-west1
+    registry:
+        required: false
+        description: 'The name of the artifact registry'
+        default: yoobic-docker-images      
+runs:
+    using: 'composite'
+    steps:
+
+        - id: auth
+          uses: google-github-actions/auth@v0.4.0
+          with:
+            credentials_json: ${{ inputs.gcp_credentials }}
+        
+        - name: Checkout and npm
+          uses: yoobic/test-github-action/.github/actions/checkout-and-npm@master
+
+        - name: Get current version of the package
+          id: package-version
+          uses: martinbeentjes/npm-get-version-action@master
+
+        - name: Authorize docker cli
+          shell: bash
+          run: |-
+            gcloud --quiet auth configure-docker ${{ inputs.region }}-docker.pkg.dev
+
+        - name: Docker meta
+          id: meta
+          uses: docker/metadata-action@v3
+          with:
+            images: |
+              ${{ inputs.region }}-docker.pkg.dev/${{ steps.auth.outputs.project_id }}/${{ inputs.registry }}/${{ inputs.image }}
+            tags: |
+              type=ref,event=tag
+              type=ref,event=branch
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v1
+        
+        - name: Build and push production image
+          uses: docker/build-push-action@v2
+          with:
+            context: .
+            builder: ${{ steps.buildx.outputs.name }}
+            build-args: |
+              NODE_ENV=production
+            push: true
+            tags: ${{ steps.meta.outputs.tags }}
+            cache-from: type=gha
+            cache-to: type=gha,mode=max
