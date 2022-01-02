@@ -10,6 +10,9 @@ inputs:
         required: false
         description: 'Personal access token (PAT) used to fetch the repository.'
         default: ${{ github.token }}
+    gcp_credentials:
+        required: false
+        description: 'The google credentials'
 runs:
     using: 'composite'
     steps:
@@ -18,6 +21,12 @@ runs:
           with:
               fetch-depth: ${{ inputs.fetch-depth }}
               token: ${{ inputs.token }}
+
+        - id: auth
+          uses: google-github-actions/auth@v0.4.0
+          if: ${{ inputs.gcp_credentials }}
+          with:
+            credentials_json: ${{ inputs.gcp_credentials }}
 
         - name: Setting up the execution env 
           uses: actions/setup-node@v2
