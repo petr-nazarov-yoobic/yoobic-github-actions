@@ -39,7 +39,8 @@ runs:
       uses: actions/cache@v2
       with:
         path: ./node_modules
-        key: modules-${{ hashFiles('package-lock.json') }}
+        key: modules-${{ hashFiles('package.json') }}
+        #key: modules-${{ hashFiles('package-lock.json') }}
         restore-keys: npm-
 
     - name: Cache pulumi
@@ -47,7 +48,8 @@ runs:
       uses: actions/cache@v2
       with:
         path: ~/.pulumi
-        key: pulumi-${{ hashFiles('package-lock.json') }}
+        key: pulumi-${{ hashFiles('package.json') }}
+        #key: modules-${{ hashFiles('package-lock.json') }}
         restore-keys: pulumi-
 
     - name: Cache eslint
