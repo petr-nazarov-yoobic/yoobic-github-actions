@@ -38,7 +38,9 @@ runs:
       id: cache-dependencies
       uses: actions/cache@v2
       with:
-        path: ./node_modules
+        path: |
+          ./node_modules
+          ~/.pulumi
         key: modules-${{ hashFiles('package-lock.json') }}
 
     - name: Cache eslint
