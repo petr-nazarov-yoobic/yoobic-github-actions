@@ -1,5 +1,5 @@
 name: 'Publish npm package to google artifacts'
-description: 'This action checks out the commit, and publish the npm package to google artifacts.'
+description: 'This action checks out the commit, and publish the npm package to google artifacts. This action typically runs after checkout-and-npm'
 author: 'yoobic'
 inputs:
     fetch-depth:
