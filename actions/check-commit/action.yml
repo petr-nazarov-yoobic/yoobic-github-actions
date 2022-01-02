@@ -1,12 +1,12 @@
-name: "Check commit message"
-description: "This action checks if the commit is a real commit or just a tag commit"
-author: "yoobic"
+name: 'Check commit message'
+description: 'This action checks if the commit is a real commit or just a tag commit'
+author: 'yoobic'
 outputs:
   match:
     description: true if the commit is not real
     value: ${{ steps.check-commit.outputs.match }}
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Compare commit message to regex
       id: check-commit
