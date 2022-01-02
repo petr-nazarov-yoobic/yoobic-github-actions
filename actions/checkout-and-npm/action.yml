@@ -38,10 +38,15 @@ runs:
       id: cache-dependencies
       uses: actions/cache@v2
       with:
-        path: |
-          ./node_modules
-          ~/.pulumi
+        path: ./node_modules
         key: modules-${{ hashFiles('package-lock.json') }}
+
+    - name: Cache dependencies
+      id: cache-dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.pulumi
+        key: pulumi-${{ hashFiles('package-lock.json') }}
 
     - name: Cache eslint
       id: cache-eslint
