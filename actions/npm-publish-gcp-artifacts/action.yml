@@ -23,9 +23,6 @@ runs:
           with:
             credentials_json: ${{ inputs.gcp_credentials }}
         
-        - name: Checkout and npm
-          uses: yoobic/yoobic-github-actions/actions/checkout-and-npm@master
-
       
         - name: Authorize npm registry
           shell: bash
