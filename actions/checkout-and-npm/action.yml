@@ -41,8 +41,8 @@ runs:
         path: ./node_modules
         key: modules-${{ hashFiles('package-lock.json') }}
 
-    - name: Cache dependencies
-      id: cache-dependencies
+    - name: Cache pulumi
+      id: cache-pulumi
       uses: actions/cache@v2
       with:
         path: ~/.pulumi
