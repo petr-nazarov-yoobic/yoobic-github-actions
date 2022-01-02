@@ -34,7 +34,7 @@ runs:
             credentials_json: ${{ inputs.gcp_credentials }}
         
         - name: Checkout and npm
-          uses: yoobic/test-github-action/.github/actions/checkout-and-npm@master
+          uses: yoobic/yoobic-github-actions/actions/checkout-and-npm@master
 
         - name: Get current version of the package
           id: package-version
