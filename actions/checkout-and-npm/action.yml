@@ -39,9 +39,9 @@ runs:
       uses: actions/cache@v2
       with:
         path: ./node_modules
-        key: npm-
+        key: modules-
         #key: modules-${{ hashFiles('package-lock.json') }}
-        restore-keys: npm-
+        restore-keys: modules-
 
     - name: Cache pulumi
       id: cache-pulumi
