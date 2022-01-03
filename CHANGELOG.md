@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/Yoobic/yoobic-github-action/compare/v1.0.1...v1.0.2) (2022-01-03)
+
+
+### Features
+
+* **app:** Add a check-commit action ([95df898](https://github.com/Yoobic/yoobic-github-action/commit/95df89818e8a7f65c56434c9c871a29d3dc94b9c))
+* **app:** Add pulumi cache ([9361998](https://github.com/Yoobic/yoobic-github-action/commit/93619982c1d701bd4c8517462635e113ef2da058))
+* **app:** Add restore key to cache for npm and pulumi ([062c1ba](https://github.com/Yoobic/yoobic-github-action/commit/062c1ba727a1dd333c03042d7d95c2f8e1422e3b))
+* **app:** Create a pulumi cache ([3ef201a](https://github.com/Yoobic/yoobic-github-action/commit/3ef201ae8d426b557fe06ac6f7a1dec89c453557))
+* **app:** Fix docker action to not do npm install ([88c12e5](https://github.com/Yoobic/yoobic-github-action/commit/88c12e52c0751ddd844a6e49fbcfebc5c6b748b7))
+* **app:** Test linting on commit ([80230a5](https://github.com/Yoobic/yoobic-github-action/commit/80230a5adfccf76a7d7c33c26f42e0f10019cc74))
+* **app:** Try cache on package.json instead of package-lock ([44aeef7](https://github.com/Yoobic/yoobic-github-action/commit/44aeef7484d081e587415274bb6d702a81e668de))
+* **app:** Try cache on package.json instead of package-lock ([32305bf](https://github.com/Yoobic/yoobic-github-action/commit/32305bfe52fc9726e33348980f0236ab5386ab4b))
+* **app:** Try cache on package.json instead of package-lock ([63911f7](https://github.com/Yoobic/yoobic-github-action/commit/63911f7274652cd3ba745aa5f9c95bb5c1d676a9))
+
+
+### Bug Fixes
+
+* **app:** Fix cache for pulumi ([199e63a](https://github.com/Yoobic/yoobic-github-action/commit/199e63ab23cbbeb4fb7099db5cd0f43516fe3978))
+
 ### 1.0.1 (2022-01-02)
 
 
