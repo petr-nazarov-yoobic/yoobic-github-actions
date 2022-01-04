@@ -53,6 +53,8 @@ runs:
           type=raw,value=github-{{branch}}-{{sha}}
         flavor: |
           latest=true
+          prefix=
+          suffix=
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
