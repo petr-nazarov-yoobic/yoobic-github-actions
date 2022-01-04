@@ -50,6 +50,7 @@ runs:
         tags: |
           type=ref,event=tag
           type=ref,event=branch
+          type=raw,value=github-{{branch}}-{{sha}}
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
