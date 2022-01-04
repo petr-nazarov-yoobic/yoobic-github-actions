@@ -50,7 +50,7 @@ runs:
         tags: |
           type=ref,event=tag
           type=ref,event=branch
-          type=raw,value=github-{{branch}}-{{sha}}
+          type=raw,value=github-{{branch}}
         flavor: |
           latest=true
           prefix=
