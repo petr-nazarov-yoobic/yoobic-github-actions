@@ -24,6 +24,7 @@ inputs:
     required: false
     description: 'The name of the artifact registry'
     default: yoobic-docker-images
+
 runs:
   using: 'composite'
   steps:
