@@ -1,0 +1,49 @@
+name: 'Running tests'
+description: 'This action will run tests in a monorepo using lerna'
+inputs:
+  token:
+    required: false
+    description: 'Personal access token (PAT) used to fetch the repository.'
+    default: ${{ github.token }}
+  mode:
+    description: 'mode to run ["affected", "cov", "all"]. Make sure test:mode exists in your package.json'
+    required: true
+    default: 'all'
+  lint:
+    description: If true will run yarn lint before tests
+    required: false
+    default: 'true'
+  coverage_threshold:
+    required: false
+    description: The coverage threshold. Default to 80
+    default: '80'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Start the docker containers
+      run: yarn env:test:up
+      shell: bash
+
+    - name: Running  lint
+      if: ${{ inputs.lint == 'true' }}
+      run: yarn lint
+      shell: bash
+
+    - name: Running  tests
+      run: yarn test:${{ mode }}
+      shell: bash
+
+    - name: Generating code cov
+      if: ${{ inputs.mode == 'cov' }}
+      uses: ArtiomTr/jest-coverage-report-action@v2.0-rc.6
+      with:
+        github-token: ${{ inputs.token}}
+        skip-step: all
+        threshold: ${{ inputs.coverage_threshold }}
+        coverage-file: ./coverage/report.json
+        # base-coverage-file: ./coverage/master/report.json
+
+    - name: Stop the docker container
+      run: yarn env:test:down
+      shell: bash
