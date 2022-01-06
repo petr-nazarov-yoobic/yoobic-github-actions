@@ -52,7 +52,7 @@ runs:
       run: 'echo "$GCP_KEY" > key.json'
       shell: bash
       env:
-        GCP_KEY: ${{ inputs.gcp-credentials }}
+        GCP_KEY: ${{ inputs.gcp_credentials }}
 
     - name: Docker meta
       id: meta
