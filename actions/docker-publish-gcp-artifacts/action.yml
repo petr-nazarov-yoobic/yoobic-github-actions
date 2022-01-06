@@ -2,17 +2,23 @@ name: 'Publish docker image to google artifacts'
 description: 'This action checks out the commit, and deploy docker to google artifacts.'
 author: 'yoobic'
 inputs:
-  fetch-depth:
-    required: false
-    description: 'Number of commits to fetch during checkout. 0 indicates all history for all branches and tags.'
-    default: '1'
-  token:
-    required: false
-    description: 'Personal access token (PAT) used to fetch the repository.'
-    default: ${{ github.token }}
   gcp_credentials:
     required: true
     description: 'The google credentials'
+  docker_context:
+    required: false
+    description: The docker context. Default to .
+    default: '.'
+  docker_file:
+    required: false
+    description: The docker file. Default tp ./Dockerfile
+    default: ./Dockerfile
+  docker_build_args:
+    required: false
+    description: The docker build args
+    default: |
+      NODE_ENV=production
+
   image:
     required: true
     description: 'The name of the image'
@@ -42,6 +48,12 @@ runs:
       run: |-
         gcloud --quiet auth configure-docker ${{ inputs.region }}-docker.pkg.dev
 
+    - name: Create a key file
+      run: 'echo "$GCP_KEY" > key.json'
+      shell: bash
+      env:
+        GCP_KEY: ${{ inputs.gcp-credentials }}
+
     - name: Docker meta
       id: meta
       uses: docker/metadata-action@v3
@@ -56,16 +68,19 @@ runs:
           latest=true
           prefix=
           suffix=
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
     - name: Build and push production image
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: ${{ inputs.docker_context }}
+        file: ${{ inputs.docker_file }}
         builder: ${{ steps.buildx.outputs.name }}
-        build-args: |
-          NODE_ENV=production
+        build-args: ${{ inputs.docker_build_args }}
+        secret-files: |
+          "KEY_SECRET=./key.json"
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         cache-from: type=gha
