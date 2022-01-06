@@ -1,0 +1,23 @@
+name: 'Publish npm package to google artifacts in a monorepo'
+description: 'This action checks out the commit, and publish the npm package to google artifacts. This action typically runs after monorepo-checkout'
+author: 'yoobic'
+inputs:
+  gcp_credentials:
+    required: true
+    description: 'The google credentials'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Google authentication
+      uses: google-github-actions/auth@v0.4.0
+      with:
+        credentials_json: ${{ inputs.gcp_credentials }}
+
+    - name: Authorize npm registry
+      shell: bash
+      run: npx google-artifactregistry-auth
+
+    - name: Publish to npm
+      shell: bash
+      run: yarn publish:npm
