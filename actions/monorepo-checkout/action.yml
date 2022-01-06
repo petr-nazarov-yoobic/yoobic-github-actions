@@ -84,10 +84,10 @@ runs:
 
     - name: Install dependencies
       if: steps.cache-dependencies.outputs.cache-hit != 'true'
-      run: yarn boostrap # ci --ignore-script
+      run: yarn bootstrap
       shell: bash
 
     - name: Build
       if: ${{ inputs.build == 'true' }}
-      run: yarn build # ci --ignore-script
+      run: yarn build
       shell: bash
