@@ -13,9 +13,29 @@ inputs:
   gcp_credentials:
     required: false
     description: 'The google credentials'
+  include_master:
+    required: false
+    description: 'Include also master branch in order to do incremental test only on changes'
+    default: 'false'
+  install:
+    required: false
+    description: 'If true will run npm install'
+  build:
+    required: false
+    description: 'If true will run npm run build'
+    default: 'true'
+
 runs:
   using: 'composite'
   steps:
+    - name: Checkout master
+      if: ${{ inputs.include_master == 'true' }}
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: ${{ inputs.fetch-depth }}
+        token: ${{ inputs.token }}
+        ref: master
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -66,6 +86,11 @@ runs:
       shell: bash
 
     - name: Install dependencies
-      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      if: steps.cache-dependencies.outputs.cache-hit != 'true' && ${{ inputs.install == 'true' }}
       run: npm install # ci --ignore-script
+      shell: bash
+
+    - name: Build
+      if: ${{ inputs.build == 'true' }}
+      run: npm run build --if-present
       shell: bash

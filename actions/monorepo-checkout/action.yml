@@ -17,9 +17,12 @@ inputs:
     required: false
     description: 'Include also master branch in order to do incremental test only on changes'
     default: 'false'
+  install:
+    required: false
+    description: 'If true will yarn boostrap'
   build:
     required: false
-    description: 'If true will also run yarn build'
+    description: 'If true will run yarn build'
     default: 'true'
 
 runs:
@@ -83,7 +86,7 @@ runs:
       shell: bash
 
     - name: Install dependencies
-      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      if: steps.cache-dependencies.outputs.cache-hit != 'true' && ${{ inputs.install == 'true' }}
       run: yarn bootstrap
       shell: bash
 
