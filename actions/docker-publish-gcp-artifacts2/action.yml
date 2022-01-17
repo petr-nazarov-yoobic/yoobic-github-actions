@@ -63,7 +63,7 @@ runs:
         gcloud --quiet auth configure-docker ${{ inputs.region }}-docker.pkg.dev
 
     - name: Create a key file
-      run: 'echo "$GCP_KEY" > key.json'
+      run: 'echo "$GCP_KEY" > google-credentials.json'
       shell: bash
       env:
         GCP_KEY: ${{ inputs.gcp_credentials }}
@@ -94,7 +94,7 @@ runs:
         builder: ${{ steps.buildx.outputs.name }}
         build-args: ${{ inputs.docker_build_args }}
         secret-files: |
-          "KEY_SECRET=./key.json"
+          "GOOGLE_CREDENTIALS_SECRET_FILE=./google-credentials.json"
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         cache-from: type=gha
