@@ -18,9 +18,8 @@ inputs:
     description: The docker build args
     default: |
       NODE_ENV=production
-
   image:
-    required: true
+    required: false
     description: 'The name of the image'
   region:
     required: false
@@ -34,6 +33,21 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - id: repoName
+      if: ${{ !inputs.image }}
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: './package.json'
+        prop_path: 'name'
+
+    - if: ${{ !inputs.image }}
+      shell: bash
+      run: echo "dockerImageName=$(echo ${{ steps.repoName.outputs.prop }})" >> $GITHUB_ENV
+
+    - if: ${{ inputs.image }}
+      shell: bash
+      run: echo "dockerImageName=$(echo ${{ inputs.image }})" >> $GITHUB_ENV
+
     - id: auth
       uses: google-github-actions/auth@v0.4.0
       with:
@@ -49,7 +63,7 @@ runs:
         gcloud --quiet auth configure-docker ${{ inputs.region }}-docker.pkg.dev
 
     - name: Create a key file
-      run: 'echo "$GCP_KEY" > key.json'
+      run: 'echo "$GCP_KEY" > google-credentials.json'
       shell: bash
       env:
         GCP_KEY: ${{ inputs.gcp_credentials }}
@@ -59,7 +73,7 @@ runs:
       uses: docker/metadata-action@v3
       with:
         images: |
-          ${{ inputs.region }}-docker.pkg.dev/${{ steps.auth.outputs.project_id }}/${{ inputs.registry }}/${{ inputs.image }}
+          ${{ inputs.region }}-docker.pkg.dev/${{ steps.auth.outputs.project_id }}/${{ inputs.registry }}/${{ env.dockerImageName }}
         tags: |
           type=ref,event=tag
           type=ref,event=branch
@@ -80,7 +94,7 @@ runs:
         builder: ${{ steps.buildx.outputs.name }}
         build-args: ${{ inputs.docker_build_args }}
         secret-files: |
-          "KEY_SECRET=./key.json"
+          "GOOGLE_CREDENTIALS_SECRET_FILE=./google-credentials.json"
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         cache-from: type=gha
