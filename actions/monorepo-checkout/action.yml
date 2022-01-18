@@ -20,6 +20,7 @@ inputs:
   install:
     required: false
     description: 'If true will yarn boostrap'
+    default: 'true'
   build:
     required: false
     description: 'If true will run yarn build'
