@@ -88,7 +88,7 @@ runs:
       shell: bash
 
     - name: Install dependencies
-      if: steps.cache-dependencies.outputs.cache-hit != 'true' && ${{ inputs.install == 'true' }}
+      if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' && inputs.install == 'true' }}
       run: npm install # ci --ignore-script
       shell: bash
 
