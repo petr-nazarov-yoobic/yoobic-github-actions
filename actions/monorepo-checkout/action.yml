@@ -42,7 +42,6 @@ runs:
       with:
         fetch-depth: ${{ inputs.fetch-depth }}
         token: ${{ inputs.token }}
-        persist-credentials: false
 
     - name: Google authentication
       uses: google-github-actions/auth@v0.4.0
