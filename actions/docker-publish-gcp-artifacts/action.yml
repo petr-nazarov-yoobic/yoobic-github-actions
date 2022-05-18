@@ -1,4 +1,4 @@
-name: 'Publish docker image to google artifacts'
+name: 'Publish docker image to google artifacts '
 description: 'This action checks out the commit, and deploy docker to google artifacts.'
 author: 'yoobic'
 inputs:
